@@ -6,6 +6,7 @@ import org.junit.Test;
  */
 public class WalletTest  {
 
+    /** Tests the deposit method. */
     @Test
     public void testDeposit() throws Exception {
         User u  = new User("Yonas Kbrom");
@@ -17,6 +18,7 @@ public class WalletTest  {
         assertEquals(60, u._wallet.accountBalance("BoA"));
     }
 
+    /** Tests the withdraw method. */
     @Test
     public void testWithdraw() throws Exception {
         User u  = new User("Yonas Kbrom");
@@ -29,6 +31,7 @@ public class WalletTest  {
         assertEquals(55, u._wallet.accountBalance("BoA"));
     }
 
+    /** Tests the transfer method. */
     @Test
     public void testTransfer() throws Exception{
         User u  = new User("Yonas Kbrom");
@@ -44,6 +47,7 @@ public class WalletTest  {
         assertEquals(10, u._wallet.accountBalance("CK"));
     }
 
+    /** Tests concurrent access by two different threads. */
     @Test
     public void testConcurrency() throws Exception {
         User u  = new User("Yonas Kbrom");
@@ -57,6 +61,20 @@ public class WalletTest  {
         assertEquals(40, u._wallet.accountBalance("BoA"));
     }
 
+    /** Tests the list of transactions. */
+    @Test
+    public void testTransactions() throws Exception {
+        User u  = new User("Yonas Kbrom");
+        u.createWallet();
+        u.createAccount("BoA");
+        u._wallet.deposit("BoA", 10);
+        u._wallet.deposit("BoA", 20);
+        u._wallet.deposit("BoA", 30);
+        u._wallet.withdraw("BoA", 5);
+        assertEquals(4, u._wallet.accountTransactions("BoA").size());
+    }
+
+    /** Tests withdraw too much from account. */
     @Test(expected = NegativeBalanceException.class)
     public void testIncorrectWithdraw() throws Exception {
         User u  = new User("Yonas Kbrom");
@@ -66,6 +84,7 @@ public class WalletTest  {
         u._wallet.withdraw("BoA", 30);
     }
 
+    /** Tests creating account with already existing name. */
     @Test(expected = Exception.class)
     public void testAccountNameAlreadyExists() throws Exception {
         User u  = new User("Yonas Kbrom");
@@ -74,6 +93,7 @@ public class WalletTest  {
         u.createAccount("BoA");
     }
 
+    /** Tests use of account that does not exist. */
     @Test(expected = Exception.class)
     public void testUseNonexistentAccount() throws Exception {
         User u  = new User("Yonas Kbrom");
@@ -83,13 +103,23 @@ public class WalletTest  {
 
     }
 
+    /** Tests depositing negative amount. */
     @Test(expected = Exception.class)
-    public void testNegativeAmount() throws Exception {
+    public void testDepositNegativeAmount() throws Exception {
         User u  = new User("Yonas Kbrom");
         u.createWallet();
         u.createAccount("BoA");
         u._wallet.deposit("BoA", -20);
+    }
 
+    /** Tests withdrawing negative amount. */
+    @Test(expected = Exception.class)
+    public void testWithdrawNegativeAmount() throws Exception {
+        User u  = new User("Yonas Kbrom");
+        u.createWallet();
+        u.createAccount("BoA");
+        u._wallet.deposit("BoA", 20);
+        u._wallet.deposit("BoA", -20);
     }
 
 
