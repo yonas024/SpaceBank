@@ -1,9 +1,8 @@
 import static org.junit.Assert.*;
 import org.junit.Test;
 
-
-/**
- * Created by yonas024 on 11/5/18.
+/** Test cases that test the overall structure of the bank.
+ *  @author Yonas Kbrom
  */
 public class WalletTest  {
 
@@ -45,6 +44,19 @@ public class WalletTest  {
         assertEquals(10, u._wallet.accountBalance("CK"));
     }
 
+    @Test
+    public void testConcurrency() throws Exception {
+        User u  = new User("Yonas Kbrom");
+        u.createWallet();
+        u.createAccount("BoA");
+        Thread t1 = new Thread(new TestingThread("hello", u._wallet, "BoA", 20));
+        Thread t2 = new Thread(new TestingThread("bye", u._wallet, "BoA", 30));
+        t1.start();
+        t2.start();
+        Thread.sleep(100);
+        assertEquals(40, u._wallet.accountBalance("BoA"));
+    }
+
     @Test(expected = NegativeBalanceException.class)
     public void testIncorrectWithdraw() throws Exception {
         User u  = new User("Yonas Kbrom");
@@ -79,4 +91,6 @@ public class WalletTest  {
         u._wallet.deposit("BoA", -20);
 
     }
+
+
 }

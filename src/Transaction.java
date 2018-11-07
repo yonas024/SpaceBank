@@ -1,27 +1,30 @@
-//package SpaceBank;
-
 import java.util.Scanner;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.Date;
 
+/** Represents a transaction from a withdraw or deposit.
+ *  @author Yonas Kbrom
+ */
 public class Transaction {
 
-    Transaction(String name, String type, int amount, long timestamp) {
+    /** A transaction that contains NAME of account, TYPE of transaction, AMOUNT withdrawn/deposited,
+     * and the TIMESTAMP */
+    Transaction(String name, String type, int amount, String timestamp) {
         _name = name;
         _type = type;
         _amount = amount;
         _timestamp = timestamp;
     }
 
-    /** Name of transaction. */
+    /** Name of account. */
     protected String _name;
-    /** Name of transaction. */
+    /** Type of transaction. */
     protected String _type;
-    /** Name of transaction. */
+    /** Amount withdrawn/deposited. */
     protected int _amount;
-    /** Name of transaction. */
-    protected long _timestamp;
+    /** Time of transaction. */
+    protected String _timestamp;
 
 }
