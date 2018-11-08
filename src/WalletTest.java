@@ -31,9 +31,9 @@ public class WalletTest  {
         assertEquals(55, u._wallet.accountBalance("BoA"));
     }
 
-    /** Tests the transfer method. */
+    /** Tests transfer between accounts for one user. */
     @Test
-    public void testTransfer() throws Exception{
+    public void testTransferAccounts() throws Exception{
         User u  = new User("Yonas Kbrom");
         u.createWallet();
         u.createAccount("BoA");
@@ -42,9 +42,25 @@ public class WalletTest  {
         u._wallet.deposit("BoA", 20);
         u._wallet.withdraw("BoA", 5);
         u.createAccount("CK");
-        u._wallet.transfer("BoA", "CK", 10);
+        u._wallet.transferBetweenAccounts("BoA", "CK", 10);
         assertEquals(45, u._wallet.accountBalance("BoA"));
         assertEquals(10, u._wallet.accountBalance("CK"));
+    }
+
+    /** Tests transfer between to users. */
+    @Test
+    public void testTransferUsers() throws Exception{
+        User yk  = new User("Yonas Kbrom");
+        User jd  = new User("John Doe");
+        yk.createWallet();
+        jd.createWallet();
+        yk.createAccount("BoA");
+        jd.createAccount("CK");
+        yk._wallet.deposit("BoA", 60);
+        jd._wallet.deposit("CK", 30);
+        yk._wallet.transferBetweenUsers("BoA", jd, "CK", 15);
+        assertEquals(45, yk._wallet.accountBalance("BoA"));
+        assertEquals(45, jd._wallet.accountBalance("CK"));
     }
 
     /** Tests concurrent access by two different threads. */

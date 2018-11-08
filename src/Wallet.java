@@ -1,5 +1,4 @@
 import java.util.HashMap;
-import java.util.ArrayList;
 import java.util.concurrent.locks.ReentrantLock;
 
 /** Represents a wallet for a specific User in the bank.
@@ -40,7 +39,7 @@ public class Wallet {
     }
 
     /** Decreases the balance of FROM by amount, increase the balance of TO by AMOUNT. */
-    public void transfer(String from, String to, int amount) throws Exception {
+    public void transferBetweenAccounts(String from, String to, int amount) throws Exception {
     	errors(from, amount);
         errors(to, amount);
     	Account f = _accounts.get(from);
@@ -49,6 +48,19 @@ public class Wallet {
         t._lock.lock();
     	f.withdraw(amount);
     	t.deposit(amount);
+        t._lock.unlock();
+        f._lock.unlock();
+    }
+
+    /** Decreases the balance of FROM by amount, increase the balance of TO by AMOUNT. */
+    public void transferBetweenUsers(String from, User user, String name, int amount) throws Exception {
+        errors(from, amount);
+        Account t = user._wallet._accounts.get(name);
+        Account f = _accounts.get(from);
+        f._lock.lock();
+        t._lock.lock();
+        f.withdraw(amount);
+        t.deposit(amount);
         t._lock.unlock();
         f._lock.unlock();
     }
